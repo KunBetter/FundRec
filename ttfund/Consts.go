@@ -12,4 +12,14 @@ const (
 	 * 获取基金列表
 	 */
 	fundsUrl = "http://fund.eastmoney.com/js/fundcode_search.js"
+
+	/**
+	 * 基金公司列表
+	 */
+	fundCompanyUrl = "http://fund.eastmoney.com/js/jjjz_gs.js"
+
+	/**
+	 * 基金估值
+	 */
+	fundValueUrl = "http://fundgz.1234567.com.cn/js/001186.js"
 )
