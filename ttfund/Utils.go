@@ -7,7 +7,7 @@ import (
 )
 
 func httpGet(url string) string {
-	resp, err := http.Get(fundsUrl)
+	resp, err := http.Get(url)
 	if err != nil {
 		log.Println(err)
 		return ""

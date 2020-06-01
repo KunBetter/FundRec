@@ -16,8 +16,38 @@ func genHistoricalNetWorthUrl(fundCode int, pageIdx int, pageSize int, sDate str
 }
 
 func (ttFund *TTFund) Test() {
+	fetchFundCompany()
 	fetchFundList()
 	fecthFundNetWorth(150270)
+}
+
+func fetchFundCompany() {
+	rawRes := httpGet(fundCompanyUrl)
+	if rawRes == "" {
+		return
+	}
+
+	var fundCompanyBuffer [][]string
+	err := json.Unmarshal([]byte(rawRes[14:len(rawRes)-1]), &fundCompanyBuffer)
+	if err != nil {
+		fmt.Println("some error")
+	}
+	fmt.Println(len(fundCompanyBuffer))
+
+	var fundCompanys []FundCompany
+	for i := 0; i < len(fundCompanyBuffer); i++ {
+		fcBuffer := fundCompanyBuffer[i]
+		if len(fcBuffer) == 2 {
+			fundCompany := FundCompany{
+				Code: fcBuffer[0],
+				Name: fcBuffer[1],
+			}
+			fundCompanys = append(fundCompanys, fundCompany)
+		} else {
+			fmt.Println(fcBuffer)
+		}
+	}
+	fmt.Println(fundCompanys)
 }
 
 func fetchFundList() {
