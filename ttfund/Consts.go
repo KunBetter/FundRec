@@ -21,5 +21,5 @@ const (
 	/**
 	 * 基金估值
 	 */
-	fundValueUrl = "http://fundgz.1234567.com.cn/js/001186.js"
+	fundValueUrl = "http://fundgz.1234567.com.cn/js/%s.js"
 )

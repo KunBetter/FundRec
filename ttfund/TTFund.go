@@ -16,9 +16,24 @@ func genHistoricalNetWorthUrl(fundCode int, pageIdx int, pageSize int, sDate str
 }
 
 func (ttFund *TTFund) Test() {
+	fetchFundValue("001186")
 	fetchFundCompany()
 	fetchFundList()
 	fecthFundNetWorth(150270)
+}
+
+func fetchFundValue(code string) {
+	rawRes := httpGet(fmt.Sprintf(fundValueUrl, code))
+	if rawRes == "" {
+		return
+	}
+
+	fv := &FundValue{}
+	err := json.Unmarshal([]byte(rawRes[8:len(rawRes)-2]), &fv)
+	if err != nil {
+		fmt.Println("some error")
+	}
+	fmt.Println(fv)
 }
 
 func fetchFundCompany() {
