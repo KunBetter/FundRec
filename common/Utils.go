@@ -1,4 +1,4 @@
-package ttfund
+package common
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func httpGet(url string) string {
+func HttpGet(url string) string {
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Println(err)

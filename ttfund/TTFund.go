@@ -3,6 +3,7 @@ package ttfund
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/KunBetter/FundRec/common"
 	"regexp"
 	"strconv"
 	"strings"
@@ -23,7 +24,7 @@ func (ttFund *TTFund) Test() {
 }
 
 func fetchFundValue(code string) {
-	rawRes := httpGet(fmt.Sprintf(fundValueUrl, code))
+	rawRes := common.HttpGet(fmt.Sprintf(fundValueUrl, code))
 	if rawRes == "" {
 		return
 	}
@@ -37,7 +38,7 @@ func fetchFundValue(code string) {
 }
 
 func fetchFundCompany() {
-	rawRes := httpGet(fundCompanyUrl)
+	rawRes := common.HttpGet(fundCompanyUrl)
 	if rawRes == "" {
 		return
 	}
@@ -66,7 +67,7 @@ func fetchFundCompany() {
 }
 
 func fetchFundList() {
-	rawRes := httpGet(fundsUrl)
+	rawRes := common.HttpGet(fundsUrl)
 	if rawRes == "" {
 		return
 	}
@@ -144,7 +145,7 @@ func fecthFundNetWorth(fundCode int) {
 	hnwUrl := genHistoricalNetWorthUrl(fundCode, 1, 20, "20200526", "20200526")
 	fmt.Println(hnwUrl)
 
-	rawRes := httpGet(hnwUrl)
+	rawRes := common.HttpGet(hnwUrl)
 	if rawRes == "" {
 		return
 	}
