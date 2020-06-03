@@ -1,9 +1,10 @@
 package common
 
 import (
-	"bytes"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func HttpGet(url string) string {
@@ -16,12 +17,24 @@ func HttpGet(url string) string {
 	defer resp.Body.Close()
 
 	if 200 == resp.StatusCode {
-		buf := bytes.NewBuffer(make([]byte, 0, 512))
-		length, _ := buf.ReadFrom(resp.Body)
+		buf, _ := ioutil.ReadAll(resp.Body)
+		return string(buf)
+	}
 
-		if len(buf.Bytes()) == int(length) {
-			return string(buf.Bytes())
-		}
+	return ""
+}
+
+func HttpPost(url string, contentType string, jsonParams string) string {
+	resp, err := http.Post(url, contentType, strings.NewReader(jsonParams))
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
+	defer resp.Body.Close()
+
+	if 200 == resp.StatusCode {
+		buf, _ := ioutil.ReadAll(resp.Body)
+		return string(buf)
 	}
 
 	return ""
