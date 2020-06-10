@@ -4,15 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/KunBetter/FundRec/common"
+	"github.com/KunBetter/FundRec/entity"
 )
-
-type Fund struct {
-	Code        string //基金代码
-	SingleSpell string //基金名称单拼
-	Name        string //基金名称中文
-	Type        string //基金类型
-	AllSpell    string //基金名称全拼
-}
 
 func fetchFundList() {
 	rawRes := common.HttpGet(fundsUrl)
@@ -27,15 +20,15 @@ func fetchFundList() {
 	}
 	fmt.Println(len(fundsBuffer))
 
-	var funds []Fund
+	var funds []entity.FundBaseInfo
 	for i := 0; i < len(fundsBuffer); i++ {
 		fundBuffer := fundsBuffer[i]
 		if len(fundBuffer) == 5 {
-			fund := Fund{
+			fund := entity.FundBaseInfo{
 				Code:        fundBuffer[0],
-				SingleSpell: fundBuffer[1],
 				Name:        fundBuffer[2],
 				Type:        fundBuffer[3],
+				SingleSpell: fundBuffer[1],
 				AllSpell:    fundBuffer[4],
 			}
 			funds = append(funds, fund)

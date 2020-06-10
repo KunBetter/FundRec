@@ -4,12 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/KunBetter/FundRec/common"
+	"github.com/KunBetter/FundRec/entity"
 )
-
-type FundCompany struct {
-	Code string //基金公司代码
-	Name string //基金公司名称中文
-}
 
 func fetchFundCompany() {
 	rawRes := common.HttpGet(fundCompanyUrl)
@@ -24,11 +20,11 @@ func fetchFundCompany() {
 	}
 	fmt.Println(len(fundCompanyBuffer))
 
-	var fundCompanys []FundCompany
+	var fundCompanys []entity.FundCompany
 	for i := 0; i < len(fundCompanyBuffer); i++ {
 		fcBuffer := fundCompanyBuffer[i]
 		if len(fcBuffer) == 2 {
-			fundCompany := FundCompany{
+			fundCompany := entity.FundCompany{
 				Code: fcBuffer[0],
 				Name: fcBuffer[1],
 			}

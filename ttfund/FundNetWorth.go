@@ -3,24 +3,14 @@ package ttfund
 import (
 	"fmt"
 	"github.com/KunBetter/FundRec/common"
+	"github.com/KunBetter/FundRec/entity"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-//基金净值
-type FundNetWorth struct {
-	Date             string  //净值日期
-	Unit             float32 //单位净值
-	Accum            float32 //累计净值
-	DailyGrowthRate  string  //日增长率
-	PurchaseStatus   string  //申购状态
-	RedemptionStatus string  //赎回状态
-	Dividend         string  //分红送配
-}
-
-func parse(resp string) []FundNetWorth {
-	var fnws []FundNetWorth
+func parse(resp string) []entity.FundNetWorth {
+	var fnws []entity.FundNetWorth
 
 	trReg, _ := regexp.Compile("<tr>(.*?)</tr>")
 	tdReg, _ := regexp.Compile("<td.*?>(.*?)</td>")
@@ -34,7 +24,7 @@ func parse(resp string) []FundNetWorth {
 				unit, _ := strconv.ParseFloat(parseTDItem(tdItems[1]), 32)
 				accum, _ := strconv.ParseFloat(parseTDItem(tdItems[2]), 32)
 
-				fundNW := FundNetWorth{
+				fundNW := entity.FundNetWorth{
 					Date:             parseTDItem(tdItems[0]),
 					Unit:             float32(unit),
 					Accum:            float32(accum),
