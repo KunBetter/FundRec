@@ -1,13 +1,12 @@
-package doctorxiong
+package entity
 
-import (
-	"encoding/json"
-	"fmt"
-	"github.com/KunBetter/FundRec/common"
-)
-
-type FundRankParam struct {
-	FundType []string `json:"fundType"` //基金种类(可以接受多个参数) ；預設值: 所有类型 ；Allowed values: {"股票型", "混合型", "债券型", "指数型", "QDII", "FOF"}
+type FundRankReqParam struct {
+	/*
+		基金种类(可以接受多个参数)
+		預設值: 所有类型
+		Allowed values: {"股票型", "混合型", "债券型", "指数型", "QDII", "FOF"}
+	*/
+	FundType []string `json:"fundType"`
 	/* 	dayGrowth日涨幅
 	  	lastWeek最近一周,
 		lastMonth最近一个月涨幅排序；
@@ -27,26 +26,4 @@ type FundRankParam struct {
 	Asc            int      `json:"asc"`            //排序方式0:降序:1升序；預設值: 0 ；Allowed values: {0，1}
 	PageIndex      int      `json:"pageIndex"`      //页码；預設值: 1
 	PageSize       int      `json:"pageSize"`       //每页显示的数量；預設值: 10
-}
-
-func fetchDXFundRank() {
-	frp := FundRankParam{
-		FundType:    []string{"指数型", "股票型", "债券型", "QDII", "FOF", "混合型"},
-		Sort:        "lastWeekGrowth",
-		FundCompany: []string{"嘉实", "易方达", "博时", "华夏", "中银", "工银", "广发", "南方", "华安", "汇添富"},
-		FundGrade:   []string{"上证五星"},
-	}
-
-	b, _ := json.Marshal(frp)
-	rawRes := common.HttpPost(dxFundRankUrl, "application/json", string(b))
-	if rawRes == "" {
-		return
-	}
-
-	fv := &DXFundHotResponse{}
-	err := json.Unmarshal([]byte(rawRes), &fv)
-	if err != nil {
-		fmt.Println("some error")
-	}
-	fmt.Println(fv)
 }

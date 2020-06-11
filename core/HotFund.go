@@ -1,4 +1,4 @@
-package doctorxiong
+package core
 
 import (
 	"encoding/json"
@@ -14,8 +14,8 @@ type DXFundHotResponse struct {
 	Meta    map[string]int `json:"meta"`
 }
 
-func fetchDXFundHot() {
-	rawRes := common.HttpGet(dxFundHotUrl)
+func (frc *FundRecCore) FetchDXFundHot() {
+	rawRes := common.HttpGet(common.DXFundHotUrl)
 	if rawRes == "" {
 		return
 	}

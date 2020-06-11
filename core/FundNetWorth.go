@@ -1,4 +1,4 @@
-package ttfund
+package core
 
 import (
 	"fmt"
@@ -8,6 +8,17 @@ import (
 	"strconv"
 	"strings"
 )
+
+func (frc *FundRecCore) FecthFundNetWorth(fundCode string) { //150270
+	hnwUrl := genHistoricalNetWorthUrl(fundCode, 1, 20, "20200526", "20200526")
+	fmt.Println(hnwUrl)
+
+	rawRes := common.HttpGet(hnwUrl)
+	if rawRes == "" {
+		return
+	}
+	fmt.Println(parse(rawRes))
+}
 
 func parse(resp string) []entity.FundNetWorth {
 	var fnws []entity.FundNetWorth
@@ -52,13 +63,6 @@ func parseTDItem(tdItem string) string {
 	return subItem[idx+1:]
 }
 
-func fecthFundNetWorth(fundCode string) {
-	hnwUrl := genHistoricalNetWorthUrl(fundCode, 1, 20, "20200526", "20200526")
-	fmt.Println(hnwUrl)
-
-	rawRes := common.HttpGet(hnwUrl)
-	if rawRes == "" {
-		return
-	}
-	fmt.Println(parse(rawRes))
+func genHistoricalNetWorthUrl(fundCode string, pageIdx int, pageSize int, sDate string, eDate string) string {
+	return fmt.Sprintf(common.HNWPrefix+"&code=%s&page=%d&per=%d&sdate=%s&edate=%s", fundCode, pageIdx, pageSize, sDate, eDate)
 }

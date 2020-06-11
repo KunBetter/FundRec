@@ -1,4 +1,4 @@
-package ttfund
+package core
 
 import (
 	"encoding/json"
@@ -7,8 +7,8 @@ import (
 	"github.com/KunBetter/FundRec/entity"
 )
 
-func fetchFundList() {
-	rawRes := common.HttpGet(fundsUrl)
+func (frc *FundRecCore) FetchFundList() {
+	rawRes := common.HttpGet(common.TTFundsListUrl)
 	if rawRes == "" {
 		return
 	}

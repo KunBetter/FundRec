@@ -36,17 +36,6 @@ type Fund struct {
 	SevenDaysYearIncomeData [][]interface{} `json:"sevenDaysYearIncomeData"` //历史七日年华收益信息(货币基金)["2016-09-23",2.131]依次表示:日期; 七日年化收益.
 }
 
-//基金净值
-type FundNetWorth struct {
-	Date             string  //净值日期
-	Unit             float32 //单位净值
-	Accum            float32 //累计净值
-	DailyGrowthRate  string  //日增长率
-	PurchaseStatus   string  //申购状态
-	RedemptionStatus string  //赎回状态
-	Dividend         string  //分红送配
-}
-
 type FundValue struct {
 	Code                string `json:"fundcode"` //基金代码
 	Name                string `json:"name"`     //基金名称
