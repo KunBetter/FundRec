@@ -49,7 +49,8 @@ func (frc *FundRecCore) addCache() {
 func (frc *FundRecCore) Run() {
 	//frc.FetchFundCompany()
 	//frc.FetchFundList()
-	frc.FecthFundNetWorth("150270")
+	//frc.FetchFundNetWorth("150270")
+	frc.FetchFundValue("001186")
 	//frc.FetchDXFundHot()
 	//frc.FetchDXFundDetail("000001")
 	//frc.FetchDXFund("202015")

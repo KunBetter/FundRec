@@ -36,13 +36,3 @@ type Fund struct {
 	SevenDaysYearIncome     float32         `json:"sevenDaysYearIncome"`     //七日年化收益(货币基金)
 	SevenDaysYearIncomeData [][]interface{} `json:"sevenDaysYearIncomeData"` //历史七日年华收益信息(货币基金)["2016-09-23",2.131]依次表示:日期; 七日年化收益.
 }
-
-type FundValue struct {
-	Code                string `json:"fundcode"` //基金代码
-	Name                string `json:"name"`     //基金名称
-	NetWorthDate        string `json:"jzrq"`     //净值日期
-	NetValueCurDay      string `json:"dwjz"`     //当日净值
-	EstimatedNetWorth   string `json:"gsz"`      //估算净值
-	EstimatedPercentage string `json:"gszzl"`    //估算涨跌百分比
-	EstimateTime        string `json:"gztime"`   //估值时间
-}

@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func (frc *FundRecCore) FecthFundNetWorth(fundCode string) {
+func (frc *FundRecCore) FetchFundNetWorth(fundCode string) {
 	frc.mysqlDB.AutoMigrate(&entity.FundNetWorth{})
 
 	hnwUrl := genHistoricalNetWorthUrl(fundCode, 1, 20, "20200526", "20200526")
