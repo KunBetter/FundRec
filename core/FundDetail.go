@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"github.com/KunBetter/FundRec/common"
 	"github.com/KunBetter/FundRec/entity"
+	"github.com/goinggo/mapstructure"
 )
 
 type DXFundDetailResponse struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    entity.Fund `json:"data"`
-	Meta    string      `json:"meta"`
+	Code    int               `json:"code"`
+	Message string            `json:"message"`
+	Data    entity.FundDetail `json:"data"`
+	Meta    string            `json:"meta"`
 }
 
 func (frc *FundRecCore) FetchDXFundDetail(code string) {
@@ -28,23 +29,30 @@ func (frc *FundRecCore) FetchDXFundDetail(code string) {
 	fmt.Println(fv)
 }
 
-type DXFResponse struct {
-	Code    int           `json:"code"`
-	Message string        `json:"message"`
-	Data    []entity.Fund `json:"data"`
-	Meta    string        `json:"meta"`
-}
+func (frc *FundRecCore) FetchFund(code string) {
+	frc.mysqlDB.AutoMigrate(&entity.Fund{})
 
-func (frc *FundRecCore) FetchDXFund(code string) {
 	rawRes := common.HttpGet(fmt.Sprintf(common.DXFundUrl, code))
 	if rawRes == "" {
 		return
 	}
 
-	fv := &DXFResponse{}
-	err := json.Unmarshal([]byte(rawRes), &fv)
+	var buf map[string]interface{}
+	err := json.Unmarshal([]byte(rawRes), &buf)
 	if err != nil {
 		fmt.Println("some error")
 	}
-	fmt.Println(fv)
+
+	data := buf["data"].([]interface{})
+	for i := 0; i < len(data); i++ {
+		fBuf := data[i].(map[string]interface{})
+
+		var fund entity.Fund
+		err = mapstructure.Decode(fBuf, &fund)
+		if err != nil {
+			fmt.Println("some error")
+		}
+
+		frc.DBRef().Create(&fund)
+	}
 }
