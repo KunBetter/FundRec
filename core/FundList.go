@@ -8,6 +8,8 @@ import (
 )
 
 func (frc *FundRecCore) FetchFundList() {
+	frc.mysqlDB.AutoMigrate(&entity.FundBaseInfo{})
+
 	rawRes := common.HttpGet(common.TTFundsListUrl)
 	if rawRes == "" {
 		return
@@ -18,9 +20,7 @@ func (frc *FundRecCore) FetchFundList() {
 	if err != nil {
 		fmt.Println("some error")
 	}
-	fmt.Println(len(fundsBuffer))
 
-	var funds []entity.FundBaseInfo
 	for i := 0; i < len(fundsBuffer); i++ {
 		fundBuffer := fundsBuffer[i]
 		if len(fundBuffer) == 5 {
@@ -31,10 +31,9 @@ func (frc *FundRecCore) FetchFundList() {
 				SingleSpell: fundBuffer[1],
 				AllSpell:    fundBuffer[4],
 			}
-			funds = append(funds, fund)
+			frc.DBRef().Create(&fund)
 		} else {
 			fmt.Println(fundBuffer)
 		}
 	}
-	fmt.Println(funds)
 }

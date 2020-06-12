@@ -1,11 +1,12 @@
 package entity
 
 type FundBaseInfo struct {
-	Code        string `json:"code"`        //基金代码
-	Name        string `json:"name"`        //基金名称中文
-	Type        string `json:"type"`        //基金类型
-	SingleSpell string `json:"singleSpell"` //基金名称单拼
-	AllSpell    string `json:"allSpell"`    //基金名称全拼
+	Id          int    `gorm:"size:11;primary_key;AUTO_INCREMENT;not null" json:"id"`
+	Code        string `gorm:"size:127;DEFAULT NULL" json:"code"`        //基金代码
+	Name        string `gorm:"size:127;DEFAULT NULL" json:"name"`        //基金名称中文
+	Type        string `gorm:"size:127;DEFAULT NULL" json:"type"`        //基金类型
+	SingleSpell string `gorm:"size:127;DEFAULT NULL" json:"singleSpell"` //基金名称单拼
+	AllSpell    string `gorm:"size:127;DEFAULT NULL" json:"allSpell"`    //基金名称全拼
 }
 
 type Fund struct {
