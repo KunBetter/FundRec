@@ -52,7 +52,8 @@ func (frc *FundRecCore) Run() {
 	//frc.FetchFundNetWorth("150270")
 	//frc.FetchFundValue("001186")
 	//frc.FetchFundPosition("001186")
-	frc.FetchFund("202015")
+	//frc.FetchFund("202015")
+	frc.FetchHotFunds()
+	//frc.FetchDXFundRank()
 	//frc.FetchDXFundDetail("001186")
-	//frc.FetchDXFundHot()
 }

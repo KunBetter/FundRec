@@ -19,10 +19,12 @@ type Fund struct {
 	TotalWorth            float32 `gorm:"type:decimal(20,4);DEFAULT 0.0" json:"totalWorth"`    //当前基金累计净值
 	ExpectGrowth          string  `gorm:"size:127;DEFAULT NULL" json:"expectGrowth"`           //当前基金单位净值估算日涨幅,单位为百分比
 	DayGrowth             string  `gorm:"size:127;DEFAULT NULL" json:"dayGrowth"`              //单位净值日涨幅,单位为百分比
+	LastWeekGrowth        string  `gorm:"size:127;DEFAULT NULL" json:"lastWeekGrowth"`         //单位净值周涨幅,单位为百分比
 	LastMonthGrowth       string  `gorm:"size:127;DEFAULT NULL" json:"lastMonthGrowth"`        //单位净值月涨幅,单位为百分比
 	LastThreeMonthsGrowth string  `gorm:"size:127;DEFAULT NULL" json:"lastThreeMonthsGrowth"`  //单位净值三月涨幅,单位为百分比
 	LastSixMonthsGrowth   string  `gorm:"size:127;DEFAULT NULL" json:"lastSixMonthsGrowth"`    //单位净值六月涨幅,单位为百分比
 	LastYearGrowth        string  `gorm:"size:127;DEFAULT NULL" json:"lastYearGrowth"`         //单位净值年涨幅,单位为百分比
+	ThisYearGrowth        string  `gorm:"size:127;DEFAULT NULL" json:"thisYearGrowth"`         //今年的涨幅,单位为百分比
 	BuyMin                float32 `gorm:"type:decimal(20,4);DEFAULT 0.0" json:"buyMin"`        //起购额度
 	BuySourceRate         float32 `gorm:"type:decimal(20,4);DEFAULT 0.0" json:"buySourceRate"` //原始买入费率,单位为百分比
 	BuyRate               float32 `gorm:"type:decimal(20,4);DEFAULT 0.0" json:"buyRate"`       //当前买入费率,单位为百分比

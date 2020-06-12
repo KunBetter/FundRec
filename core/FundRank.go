@@ -21,10 +21,9 @@ func (frc *FundRecCore) FetchDXFundRank() {
 		return
 	}
 
-	fv := &DXFundHotResponse{}
-	err := json.Unmarshal([]byte(rawRes), &fv)
+	var buf map[string]interface{}
+	err := json.Unmarshal([]byte(rawRes), &buf)
 	if err != nil {
 		fmt.Println("some error")
 	}
-	fmt.Println(fv)
 }

@@ -5,25 +5,43 @@ import (
 	"fmt"
 	"github.com/KunBetter/FundRec/common"
 	"github.com/KunBetter/FundRec/entity"
+	"github.com/goinggo/mapstructure"
+	"strconv"
 )
 
-type DXFundHotResponse struct {
-	Code    int            `json:"code"`
-	Message string         `json:"message"`
-	Data    []entity.Fund  `json:"data"`
-	Meta    map[string]int `json:"meta"`
-}
+func (frc *FundRecCore) FetchHotFunds() {
+	frc.mysqlDB.AutoMigrate(&entity.Fund{})
 
-func (frc *FundRecCore) FetchDXFundHot() {
 	rawRes := common.HttpGet(common.DXFundHotUrl)
 	if rawRes == "" {
 		return
 	}
 
-	fv := &DXFundHotResponse{}
-	err := json.Unmarshal([]byte(rawRes), &fv)
+	var buf map[string]interface{}
+	err := json.Unmarshal([]byte(rawRes), &buf)
 	if err != nil {
 		fmt.Println("some error")
 	}
-	fmt.Println(fv)
+
+	data := buf["data"].([]interface{})
+	for i := 0; i < len(data); i++ {
+		fBuf := data[i].(map[string]interface{})
+
+		netWorthStr := fBuf["netWorth"].(string)
+		delete(fBuf, "netWorth")
+		value, err := strconv.ParseFloat(netWorthStr, 32)
+		if err != nil {
+			fmt.Println("some error")
+		}
+		netWorth := float32(value)
+
+		var fund entity.Fund
+		err = mapstructure.Decode(fBuf, &fund)
+		if err != nil {
+			fmt.Println("some error")
+		}
+
+		fund.NetWorth = netWorth
+		frc.DBRef().Create(&fund)
+	}
 }
