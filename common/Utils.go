@@ -1,11 +1,21 @@
 package common
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
+
+func Str2Float32(f string) float32 {
+	value, err := strconv.ParseFloat(f, 32)
+	if err != nil {
+		fmt.Println("some error")
+	}
+	return float32(value)
+}
 
 func HttpGet(url string) string {
 	resp, err := http.Get(url)
