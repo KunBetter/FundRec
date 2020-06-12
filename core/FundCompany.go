@@ -8,6 +8,9 @@ import (
 )
 
 func (frc *FundRecCore) FetchFundCompany() {
+	//Create Table
+	frc.mysqlDB.AutoMigrate(&entity.FundCompany{})
+
 	rawRes := common.HttpGet(common.TTFundCompanyUrl)
 	if rawRes == "" {
 		return
@@ -18,9 +21,7 @@ func (frc *FundRecCore) FetchFundCompany() {
 	if err != nil {
 		fmt.Println("some error")
 	}
-	fmt.Println(len(fundCompanyBuffer))
 
-	var fundCompanys []entity.FundCompany
 	for i := 0; i < len(fundCompanyBuffer); i++ {
 		fcBuffer := fundCompanyBuffer[i]
 		if len(fcBuffer) == 2 {
@@ -28,10 +29,10 @@ func (frc *FundRecCore) FetchFundCompany() {
 				Code: fcBuffer[0],
 				Name: fcBuffer[1],
 			}
-			fundCompanys = append(fundCompanys, fundCompany)
+			//Insert to DB
+			frc.DBRef().Create(&fundCompany)
 		} else {
 			fmt.Println(fcBuffer)
 		}
 	}
-	fmt.Println(fundCompanys)
 }

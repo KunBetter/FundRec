@@ -1,6 +1,10 @@
 package common
 
 const (
+	FundCompanyCache = "fundCompany"
+)
+
+const (
 	//******************************熊博士数据源****************************************
 	// https://www.doctorxiong.club
 	/**

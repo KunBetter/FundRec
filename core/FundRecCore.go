@@ -1,24 +1,44 @@
 package core
 
 import (
+	"fmt"
+	"github.com/KunBetter/FundRec/common"
 	"github.com/allegro/bigcache"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"time"
 )
 
 type FundRecCore struct {
-	caches  map[int]*bigcache.BigCache
+	caches  map[string]*bigcache.BigCache
 	mysqlDB *gorm.DB
 }
 
-func (frc *FundRecCore) Init() {
-	frc.caches = make(map[int]*bigcache.BigCache)
+func (frc *FundRecCore) DBRef() *gorm.DB {
+	return frc.mysqlDB
+}
+
+func (frc *FundRecCore) Init() bool {
+	frc.caches = make(map[string]*bigcache.BigCache)
 	frc.addCache()
+
+	var err error
+	frc.mysqlDB, err = gorm.Open("mysql", "root:root1234@tcp(127.0.0.1:3306)/funds?charset=utf8")
+	if err != nil {
+		fmt.Println("failed to connect database:", err)
+		return false
+	} else {
+		fmt.Println("connect database success")
+		frc.mysqlDB.SingularTable(true)
+	}
+	//defer frc.mysqlDB.Close()
+
+	return true
 }
 
 func (frc *FundRecCore) addCache() {
 	cache, _ := bigcache.NewBigCache(bigcache.DefaultConfig(10 * time.Minute))
-	frc.caches[0] = cache
+	frc.caches[common.FundCompanyCache] = cache
 	/*
 		cache.Set("my-unique-key", []byte("value"))
 		entry, _ := cache.Get("my-unique-key")
@@ -27,8 +47,9 @@ func (frc *FundRecCore) addCache() {
 }
 
 func (frc *FundRecCore) Run() {
-	frc.FetchDXFundHot()
-	frc.FetchDXFundDetail("000001")
-	frc.FetchDXFund("202015")
-	frc.FetchDXFundPosition("202015")
+	frc.FetchFundCompany()
+	//frc.FetchDXFundHot()
+	//frc.FetchDXFundDetail("000001")
+	//frc.FetchDXFund("202015")
+	//frc.FetchDXFundPosition("202015")
 }

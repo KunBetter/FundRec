@@ -1,6 +1,7 @@
 package entity
 
 type FundCompany struct {
-	Code string `json:"code"` //基金公司代码
-	Name string `json:"name"` //基金公司名称中文
+	Id   int    `gorm:"size:11;primary_key;AUTO_INCREMENT;not null" json:"id"`
+	Code string `gorm:"size:127;DEFAULT NULL" json:"code"` //基金公司代码
+	Name string `gorm:"size:127;DEFAULT NULL" json:"name"` //基金公司名称中文
 }
