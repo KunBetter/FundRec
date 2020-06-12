@@ -9,18 +9,22 @@ import (
 	"strings"
 )
 
-func (frc *FundRecCore) FecthFundNetWorth(fundCode string) { //150270
-	hnwUrl := genHistoricalNetWorthUrl(fundCode, 1, 20, "20200526", "20200526")
-	fmt.Println(hnwUrl)
+func (frc *FundRecCore) FecthFundNetWorth(fundCode string) {
+	frc.mysqlDB.AutoMigrate(&entity.FundNetWorth{})
 
+	hnwUrl := genHistoricalNetWorthUrl(fundCode, 1, 20, "20200526", "20200526")
 	rawRes := common.HttpGet(hnwUrl)
 	if rawRes == "" {
 		return
 	}
-	fmt.Println(parse(rawRes))
+	fundsNW := parse(rawRes, fundCode)
+	for i := 0; i < len(fundsNW); i++ {
+		fundNW := fundsNW[i]
+		frc.DBRef().Create(&fundNW)
+	}
 }
 
-func parse(resp string) []entity.FundNetWorth {
+func parse(resp string, fundCode string) []entity.FundNetWorth {
 	var fnws []entity.FundNetWorth
 
 	trReg, _ := regexp.Compile("<tr>(.*?)</tr>")
@@ -36,6 +40,7 @@ func parse(resp string) []entity.FundNetWorth {
 				accum, _ := strconv.ParseFloat(parseTDItem(tdItems[2]), 32)
 
 				fundNW := entity.FundNetWorth{
+					Code:             fundCode,
 					Date:             parseTDItem(tdItems[0]),
 					Unit:             float32(unit),
 					Accum:            float32(accum),
