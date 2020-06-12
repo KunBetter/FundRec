@@ -22,6 +22,8 @@ func (frc *FundRecCore) FetchRankedFunds() {
 		return
 	}
 
+	frc.mysqlDB.AutoMigrate(&entity.Fund{})
+
 	var buf map[string]interface{}
 	err := json.Unmarshal([]byte(rawRes), &buf)
 	if err != nil {
@@ -39,7 +41,7 @@ func (frc *FundRecCore) FetchRankedFunds() {
 		var fund entity.Fund
 		err = mapstructure.Decode(fBuf, &fund)
 		if err != nil {
-			fmt.Println("some error")
+			fmt.Println("some error in FetchRankedFunds")
 		}
 
 		fund.NetWorth = netWorth
