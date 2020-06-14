@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"github.com/KunBetter/FundRec/common"
+	"github.com/KunBetter/FundRec/config"
 	"github.com/allegro/bigcache"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -10,6 +11,7 @@ import (
 )
 
 type FundRecCore struct {
+	Config  config.Config
 	caches  map[string]*bigcache.BigCache
 	mysqlDB *gorm.DB
 }
