@@ -1,10 +1,9 @@
 package config
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/KunBetter/FundRec/env"
 	"gopkg.in/yaml.v2"
-	"log"
 	"os"
 )
 
@@ -20,26 +19,24 @@ type Mysql struct {
 	DBName   string `yaml:"dbname"`
 }
 
-func ReadYamlConfig(path string) (*Config, error) {
+func LoadConfig() *Config {
 	conf := &Config{}
-	if f, err := os.Open(path); err != nil {
-		return nil, err
+
+	curEnv := env.GetCurEnv()
+	configPath := "Config_Test.yaml"
+	if curEnv == env.Prod {
+		configPath = "Config_Prod.yaml"
+	}
+
+	if file, err := os.Open("config/" + configPath); err != nil {
+		fmt.Print(err)
+		return nil
 	} else {
-		yaml.NewDecoder(f).Decode(conf)
-	}
-	return conf, nil
-}
-
-func ConfigTest() {
-	conf, err := ReadYamlConfig("D:/test_yaml/test.yaml")
-	if err != nil {
-		log.Fatal(err)
+		err = yaml.NewDecoder(file).Decode(conf)
+		if nil != err {
+			fmt.Print(err)
+		}
 	}
 
-	byts, err := json.Marshal(conf)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println(string(byts))
+	return conf
 }

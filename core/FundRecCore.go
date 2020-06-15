@@ -11,9 +11,9 @@ import (
 )
 
 type FundRecCore struct {
-	Config  config.Config
-	caches  map[string]*bigcache.BigCache
+	conf    *config.Config
 	mysqlDB *gorm.DB
+	caches  map[string]*bigcache.BigCache
 }
 
 func (frc *FundRecCore) DBRef() *gorm.DB {
@@ -21,11 +21,13 @@ func (frc *FundRecCore) DBRef() *gorm.DB {
 }
 
 func (frc *FundRecCore) Init() bool {
-	frc.caches = make(map[string]*bigcache.BigCache)
-	frc.addCache()
+	frc.conf = config.LoadConfig()
+
+	DBUri := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
+		frc.conf.Mysql.Username, frc.conf.Mysql.Password, frc.conf.Mysql.Host, frc.conf.Mysql.Port, frc.conf.Mysql.DBName)
 
 	var err error
-	frc.mysqlDB, err = gorm.Open("mysql", "root:root1234@tcp(127.0.0.1:3306)/funds?charset=utf8")
+	frc.mysqlDB, err = gorm.Open("mysql", DBUri)
 	if err != nil {
 		fmt.Println("failed to connect database:", err)
 		return false
@@ -34,6 +36,9 @@ func (frc *FundRecCore) Init() bool {
 		frc.mysqlDB.SingularTable(true)
 	}
 	//defer frc.mysqlDB.Close()
+
+	frc.caches = make(map[string]*bigcache.BigCache)
+	frc.addCache()
 
 	return true
 }
