@@ -8,51 +8,28 @@ import (
 	"net/http"
 )
 
-type FundStore struct {
-	MysqlDB *gorm.DB
+type MysqlDB struct {
+	db *gorm.DB
 }
 
-type User struct {
-	Id   int    `gorm:"size:11;primary_key;AUTO_INCREMENT;not null" json:"id"`
-	Age  int    `gorm:"size:11;DEFAULT NULL" json:"age"`
-	Name string `gorm:"size:255;DEFAULT NULL" json:"name"`
-}
 
-func (fs *FundStore) Store() {
+func (ptr *MysqlDB) Open(dbUri string) {
 	var err error
-	fs.MysqlDB, err = gorm.Open("mysql", "root:root1234@tcp(127.0.0.1:3306)/funds?charset=utf8")
+	ptr.db, err = gorm.Open("mysql", dbUri)
 	if err != nil {
 		fmt.Println("failed to connect database:", err)
 		return
 	} else {
 		fmt.Println("connect database success")
-		fs.MysqlDB.SingularTable(true)
-		fs.MysqlDB.AutoMigrate(&User{}) //自动建表
-		fmt.Println("create table success")
+		ptr.db.SingularTable(true)
 	}
-	defer fs.MysqlDB.Close()
-
-	fs.Router()
+	defer ptr.db.Close()
 }
 
-func (fs *FundStore) Router() {
-	router := gin.Default()
-	//路径映射
-	router.GET("/user", fs.InitPage)
-	router.POST("/user/create", fs.CreateUser)
-	router.GET("/user/list", fs.ListUser)
-	router.PUT("/user/update", fs.UpdateUser)
-	router.GET("/user/find", fs.GetUser)
-	router.DELETE("/user/:id", fs.DeleteUser)
-	router.Run(":8080")
+func (ptr *MysqlDB)Insert(){
+
 }
 
-//每个路由都对应一个具体的函数操作,从而实现了对user的增,删,改,查操作
-func (fs *FundStore) InitPage(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "pong",
-	})
-}
 
 func (fs *FundStore) CreateUser(c *gin.Context) {
 	var user User
