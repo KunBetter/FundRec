@@ -86,14 +86,16 @@ func (frc *FundRecCore) GetFunc(c *gin.Context) {
 	c.JSON(http.StatusOK, &line)
 }
 
-func (frc *FundRecCore) Run() {
-	//frc.FetchFundCompany()
-	//frc.FetchFundList()
-	//frc.FetchFundNetWorth("150270")
-	//frc.FetchFundValue("001186")
-	//frc.FetchFundPosition("001186")
-	//frc.FetchFund("202015")
-	//frc.FetchHotFunds()
-	//frc.FetchRankedFunds()
-	frc.FetchDXFundDetail("003171")
+func (frc *FundRecCore) FundDataFetch() {
+	go frc.FetchFundCompany()
+	go frc.FetchFundList()
+
+	go frc.FetchHotFunds()
+	go frc.FetchRankedFunds()
+
+	go frc.FetchFundNetWorth("150270")
+	go frc.FetchFundValue("001186")
+	go frc.FetchFundPosition("001186")
+	go frc.FetchFund("202015")
+	go frc.FetchDXFundDetail("003171")
 }

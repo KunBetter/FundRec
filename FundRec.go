@@ -7,5 +7,6 @@ import (
 func main() {
 	frc := &core.FundRecCore{}
 	frc.Init()
-	frc.Run()
+	frc.FundDataFetch()
+	frc.Router()
 }
