@@ -16,6 +16,8 @@ type FundRecCore struct {
 	conf    *config.Config
 	mysqlDB *gorm.DB
 	caches  map[string]*bigcache.BigCache
+
+	fcFetch *FundCompanyFetch
 }
 
 func (frc *FundRecCore) DBRef() *gorm.DB {
@@ -41,6 +43,10 @@ func (frc *FundRecCore) Init() bool {
 
 	frc.caches = make(map[string]*bigcache.BigCache)
 	frc.addCache()
+
+	frc.fcFetch = &FundCompanyFetch{
+		RecCore: frc,
+	}
 
 	return true
 }
@@ -87,7 +93,10 @@ func (frc *FundRecCore) GetFunc(c *gin.Context) {
 }
 
 func (frc *FundRecCore) FundDataFetch() {
-	go frc.FetchFundCompany()
+	frc.fcFetch.Init()
+	frc.fcFetch.Process()
+
+	/*go frc.FetchFundCompany()
 	go frc.FetchFundList()
 
 	go frc.FetchHotFunds()
@@ -97,5 +106,5 @@ func (frc *FundRecCore) FundDataFetch() {
 	go frc.FetchFundValue("001186")
 	go frc.FetchFundPosition("001186")
 	go frc.FetchFund("202015")
-	go frc.FetchDXFundDetail("003171")
+	go frc.FetchDXFundDetail("003171")*/
 }

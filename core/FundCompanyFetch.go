@@ -5,11 +5,26 @@ import (
 	"fmt"
 	"github.com/KunBetter/FundRec/common"
 	"github.com/KunBetter/FundRec/entity"
+	"strings"
+	"time"
 )
 
-func (frc *FundRecCore) FetchFundCompany() {
-	//Create Table
-	frc.mysqlDB.AutoMigrate(&entity.FundCompany{})
+type FundCompanyFetch struct {
+	RecCore *FundRecCore
+}
+
+func (fc *FundCompanyFetch) Init() {
+	fc.RecCore.mysqlDB.AutoMigrate(&entity.FundCompany{})
+}
+
+func (fc *FundCompanyFetch) Process() {
+	curDay := time.Now().Format("1900-01-01")
+
+	flag := GetFetchFlag(FundCompany)
+	if nil == flag || curDay == flag.LatestDay {
+		fmt.Println("FundCompany Fetch Today!")
+		return
+	}
 
 	rawRes := common.HttpGet(common.TTFundCompanyUrl)
 	if rawRes == "" {
@@ -22,6 +37,12 @@ func (frc *FundRecCore) FetchFundCompany() {
 		fmt.Println("some error")
 	}
 
+	if len(fundCompanyBuffer) <= 0 {
+		return
+	}
+
+	var fundCompanies []entity.FundCompany
+	var companyName []string
 	for i := 0; i < len(fundCompanyBuffer); i++ {
 		fcBuffer := fundCompanyBuffer[i]
 		if len(fcBuffer) == 2 {
@@ -29,10 +50,25 @@ func (frc *FundRecCore) FetchFundCompany() {
 				Code: fcBuffer[0],
 				Name: fcBuffer[1],
 			}
-			//Insert to DB
-			frc.DBRef().Create(&fundCompany)
+			fundCompanies = append(fundCompanies, fundCompany)
+			companyName = append(companyName, fundCompany.Name)
 		} else {
 			fmt.Println(fcBuffer)
 		}
 	}
+
+	flushMD5 := Hash(strings.Join(companyName, ""))
+	if flag.MD5 == flushMD5 {
+		fmt.Println("FundCompany Data Not Changed!")
+		return
+	}
+
+	flag.MD5 = flushMD5
+	flag.LatestDay = curDay
+
+	for i := 0; i < len(fundCompanies); i++ {
+		fc.RecCore.DBRef().Create(&fundCompanies[i])
+	}
+
+	WriteFlag(FundCompany, flag)
 }
