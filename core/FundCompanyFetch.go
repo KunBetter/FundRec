@@ -18,10 +18,10 @@ func (fc *FundCompanyFetch) Init() {
 }
 
 func (fc *FundCompanyFetch) Process() {
-	curDay := time.Now().Format("1900-01-01")
+	curDay := time.Now().Format("2006-01-02")
 
 	flag := GetFetchFlag(FundCompany)
-	if nil == flag || curDay == flag.LatestDay {
+	if nil != flag && curDay == flag.LatestDay {
 		fmt.Println("FundCompany Fetch Today!")
 		return
 	}
@@ -58,11 +58,14 @@ func (fc *FundCompanyFetch) Process() {
 	}
 
 	flushMD5 := Hash(strings.Join(companyName, ""))
-	if flag.MD5 == flushMD5 {
+	if flag != nil && flag.MD5 == flushMD5 {
 		fmt.Println("FundCompany Data Not Changed!")
 		return
 	}
 
+	if nil == flag {
+		flag = &FetchFlag{}
+	}
 	flag.MD5 = flushMD5
 	flag.LatestDay = curDay
 
