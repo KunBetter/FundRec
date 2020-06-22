@@ -51,3 +51,7 @@ func (ptr *MysqlDB) GetById(id interface{}, data interface{}) {
 func (ptr *MysqlDB) Delete(id interface{}, data interface{}) {
 	ptr.db.Where("id = ?", id).Delete(&data)
 }
+
+func (ptr *MysqlDB) Clear(table interface{}) {
+	ptr.db.Delete(&table)
+}

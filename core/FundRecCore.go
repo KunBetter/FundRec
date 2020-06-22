@@ -18,6 +18,7 @@ type FundRecCore struct {
 	caches  map[string]*bigcache.BigCache
 
 	fcFetch *FundCompanyFetch
+	flFetch *FundListFetch
 }
 
 func (frc *FundRecCore) DBRef() *gorm.DB {
@@ -45,6 +46,10 @@ func (frc *FundRecCore) Init() bool {
 	frc.addCache()
 
 	frc.fcFetch = &FundCompanyFetch{
+		RecCore: frc,
+	}
+
+	frc.flFetch = &FundListFetch{
 		RecCore: frc,
 	}
 
@@ -96,15 +101,17 @@ func (frc *FundRecCore) FundDataFetch() {
 	frc.fcFetch.Init()
 	frc.fcFetch.Process()
 
-	/*go frc.FetchFundCompany()
-	go frc.FetchFundList()
+	frc.flFetch.Init()
+	frc.flFetch.Process()
 
-	go frc.FetchHotFunds()
-	go frc.FetchRankedFunds()
+	/*
+		go frc.FetchHotFunds()
+		go frc.FetchRankedFunds()
 
-	go frc.FetchFundNetWorth("150270")
-	go frc.FetchFundValue("001186")
-	go frc.FetchFundPosition("001186")
-	go frc.FetchFund("202015")
-	go frc.FetchDXFundDetail("003171")*/
+		go frc.FetchFundNetWorth("150270")
+		go frc.FetchFundValue("001186")
+		go frc.FetchFundPosition("001186")
+		go frc.FetchFund("202015")
+		go frc.FetchDXFundDetail("003171")
+	*/
 }

@@ -6,4 +6,5 @@ type Persistence interface {
 	List(line interface{}, data []interface{})
 	GetById(id interface{}, data interface{})
 	Delete(id interface{}, data interface{})
+	Clear(table interface{})
 }

@@ -22,7 +22,7 @@ func (fc *FundCompanyFetch) Process() {
 
 	flag := GetFetchFlag(FundCompany)
 	if nil != flag && curDay == flag.LatestDay {
-		fmt.Println("FundCompany Fetch Today!")
+		fmt.Println("FundCompany Fetched Today!")
 		return
 	}
 
@@ -68,6 +68,8 @@ func (fc *FundCompanyFetch) Process() {
 	}
 	flag.MD5 = flushMD5
 	flag.LatestDay = curDay
+
+	fc.RecCore.DBRef().Delete(entity.FundCompany{})
 
 	for i := 0; i < len(fundCompanies); i++ {
 		fc.RecCore.DBRef().Create(&fundCompanies[i])
