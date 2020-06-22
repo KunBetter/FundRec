@@ -5,16 +5,31 @@ import (
 	"fmt"
 	"github.com/KunBetter/FundRec/common"
 	"github.com/KunBetter/FundRec/entity"
+	"github.com/KunBetter/FundRec/schedule"
 	"strings"
 	"time"
 )
 
 type FundListFetch struct {
-	RecCore *FundRecCore
+	RecCore   *FundRecCore
+	Scheduler *schedule.Scheduler
 }
 
 func (fl *FundListFetch) Init() {
 	fl.RecCore.mysqlDB.AutoMigrate(&entity.FundBaseInfo{})
+}
+
+func (fl *FundListFetch) Start() {
+	//engine start
+	fl.Init()
+	fl.Process()
+
+	fl.Scheduler = schedule.NewScheduler(BaseFetchSpecTime, fl)
+	fl.Scheduler.Start()
+}
+
+func (fl *FundListFetch) Run() {
+	fl.Process()
 }
 
 func (fl *FundListFetch) Process() {

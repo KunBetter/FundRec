@@ -98,11 +98,8 @@ func (frc *FundRecCore) GetFunc(c *gin.Context) {
 }
 
 func (frc *FundRecCore) FundDataFetch() {
-	frc.fcFetch.Init()
-	frc.fcFetch.Process()
-
-	frc.flFetch.Init()
-	frc.flFetch.Process()
+	frc.fcFetch.Start()
+	frc.flFetch.Start()
 
 	/*
 		go frc.FetchHotFunds()
