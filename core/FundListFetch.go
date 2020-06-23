@@ -16,7 +16,7 @@ type FundListFetch struct {
 }
 
 func (fl *FundListFetch) Init() {
-	fl.RecCore.mysqlDB.AutoMigrate(&entity.FundBaseInfo{})
+	fl.RecCore.DBRef().AutoMigrate(&entity.FundBaseInfo{})
 }
 
 func (fl *FundListFetch) Start() {

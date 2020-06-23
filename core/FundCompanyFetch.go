@@ -16,7 +16,7 @@ type FundCompanyFetch struct {
 }
 
 func (fc *FundCompanyFetch) Init() {
-	fc.RecCore.mysqlDB.AutoMigrate(&entity.FundCompany{})
+	fc.RecCore.DBRef().AutoMigrate(&entity.FundCompany{})
 }
 
 func (fc *FundCompanyFetch) Start() {

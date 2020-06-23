@@ -1,5 +1,5 @@
 package strategy
 
 //Recommendation Strategy
-type Strategy struct {
+type RecStrategy struct {
 }

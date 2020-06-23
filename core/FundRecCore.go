@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"github.com/KunBetter/FundRec/common"
 	"github.com/KunBetter/FundRec/config"
+	"github.com/KunBetter/FundRec/strategy"
 	"github.com/allegro/bigcache"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"net/http"
 	"time"
 )
 
@@ -19,6 +19,9 @@ type FundRecCore struct {
 
 	fcFetch *FundCompanyFetch
 	flFetch *FundListFetch
+	fvFetch *FundValueFetch
+
+	rs *strategy.RecStrategy
 }
 
 func (frc *FundRecCore) DBRef() *gorm.DB {
@@ -53,6 +56,10 @@ func (frc *FundRecCore) Init() bool {
 		RecCore: frc,
 	}
 
+	frc.fvFetch = &FundValueFetch{
+		RecCore: frc,
+	}
+
 	return true
 }
 
@@ -66,49 +73,22 @@ func (frc *FundRecCore) addCache() {
 	*/
 }
 
-func (frc *FundRecCore) Router() {
-	router := gin.Default()
-
-	router.POST("/rec/create", frc.PostFunc)
-	router.PUT("/rec/update", frc.PutFunc)
-	router.GET("/rec/find", frc.GetFunc)
-
-	router.Run(":8080")
-}
-
-func (frc *FundRecCore) PostFunc(c *gin.Context) {
-	var user interface{}
-	c.BindJSON(&user) //使用bindJSON填充对象
-	//biz code
-	c.JSON(http.StatusOK, &user) //返回页面
-}
-
-func (frc *FundRecCore) PutFunc(c *gin.Context) {
-	var user interface{}
-	c.PostForm("id")
-	c.BindJSON(&user)
-	//biz code
-	c.JSON(http.StatusOK, &user)
-}
-
-func (frc *FundRecCore) GetFunc(c *gin.Context) {
-	line := c.Query("line")
-	//biz code
-	c.JSON(http.StatusOK, &line)
-}
-
 func (frc *FundRecCore) FundDataFetch() {
 	frc.fcFetch.Start()
 	frc.flFetch.Start()
+	frc.fvFetch.Start()
+}
 
-	/*
-		go frc.FetchHotFunds()
-		go frc.FetchRankedFunds()
+func (frc *FundRecCore) Rec() {
+}
 
-		go frc.FetchFundNetWorth("150270")
-		go frc.FetchFundValue("001186")
-		go frc.FetchFundPosition("001186")
-		go frc.FetchFund("202015")
-		go frc.FetchDXFundDetail("003171")
-	*/
+func (frc *FundRecCore) Router() {
+	router := gin.Default()
+
+	router.GET("/rec/funds", frc.GetRecFunds)
+	router.Run(":8080")
+}
+
+func (frc *FundRecCore) GetRecFunds(c *gin.Context) {
+	frc.Rec()
 }
