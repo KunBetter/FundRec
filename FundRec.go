@@ -8,4 +8,5 @@ func main() {
 	frc := &core.FundRecCore{}
 	frc.Init()
 	frc.FundDataFetch()
+	frc.Router()
 }
